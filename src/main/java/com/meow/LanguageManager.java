@@ -51,6 +51,7 @@ public class LanguageManager {
             messages.put("periodic-check-enabled", "已启用定期检查, 间隔: %.1f秒");
             messages.put("periodic-check-disabled", "已禁用定期检查");
             messages.put("illegal-op-detected", "检测到非法OP玩家: %s, 已取消其OP权限");
+            messages.put("periodic-check-stopped", "定期检查已停止");
         } else if ("zh_hant".equalsIgnoreCase(language)) {
             // 繁體中文消息
             messages.put("TranslationContributors", "當前語言: 繁體中文 (貢獻者: Zhang1233 & TongYi-Lingma LLM)");
@@ -72,6 +73,7 @@ public class LanguageManager {
             messages.put("periodic-check-enabled", "已啟用定期检查, 間隔: %.1f秒");
             messages.put("periodic-check-disabled", "已禁用定期检查");
             messages.put("illegal-op-detected", "檢測到非法OP玩家: %s, 已取消其OP權限");
+            messages.put("periodic-check-stopped", "定期检查已停止");
         } else if ("en_us".equalsIgnoreCase(language)) {
             // English messages
             messages.put("TranslationContributors", "Current Language: English (Contributors: Zhang1233)");
@@ -93,6 +95,7 @@ public class LanguageManager {
             messages.put("periodic-check-enabled", "Periodic check enabled, interval: %.1f seconds");
             messages.put("periodic-check-disabled", "Periodic check disabled");
             messages.put("illegal-op-detected", "Illegal OP player detected: %s, OP permission has been revoked");
+            messages.put("periodic-check-stopped", "Periodic check stopped");
         } else if ("ja_jp".equalsIgnoreCase(language)) {
             // 日本语消息
             messages.put("TranslationContributors", "現在の言語: 日本語 (寄稿者: Zhang1233 & TongYi-Lingma LLM)");
@@ -114,6 +117,7 @@ public class LanguageManager {
             messages.put("periodic-check-enabled", "定期チェックが有効化されました, 間隔: %.1f秒");
             messages.put("periodic-check-disabled", "定期チェックが無効化されました");
             messages.put("illegal-op-detected", " Illegal OPプレイヤーが検出されました: %s, OP権限が取り消されました");
+            messages.put("periodic-check-stopped", "定期チェックが停止しました");
         }
     }
 

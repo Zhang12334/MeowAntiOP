@@ -3,14 +3,13 @@ package com.meow;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class MeowAntiOP extends JavaPlugin implements Listener {
+public class MeowAntiOP extends JavaPlugin {
 
     // 配置项
     private LanguageManager languageManager;
@@ -26,15 +25,12 @@ public class MeowAntiOP extends JavaPlugin implements Listener {
         int pluginId = 25572;
         Metrics metrics = new Metrics(this, pluginId);
         
-        // 加载默认配置文件
+        // 加载配置文件
         saveDefaultConfig();
-        reloadConfig();
+        loadConfig();
 
         // 初始化 LanguageManager
         languageManager = new LanguageManager(getConfig());
-
-        // 加载配置
-        loadConfig();
 
         // 检查前置库是否加载
         if (!Bukkit.getPluginManager().isPluginEnabled("MeowLibs")) {
@@ -49,8 +45,8 @@ public class MeowAntiOP extends JavaPlugin implements Listener {
         // 翻译者信息
         getLogger().info(languageManager.getMessage("TranslationContributors"));
 
-        // 注册事件和命令
-        getServer().getPluginManager().registerEvents(this, this);
+        // 注册事件监听器
+        Bukkit.getPluginManager().registerEvents(new Listener(this), this);
 
         // 启动消息
         getLogger().info(languageManager.getMessage("startup"));
@@ -75,6 +71,13 @@ public class MeowAntiOP extends JavaPlugin implements Listener {
 
         // 启动定期检查任务
         startPeriodicCheck();
+    }
+
+    @Override
+    public void onDisable() {
+        // 取消定期检查任务
+        stopPeriodicCheck();
+        getLogger().info("MeowAntiOP 已禁用!");
     }
 
     // 加载配置
@@ -130,25 +133,38 @@ public class MeowAntiOP extends JavaPlugin implements Listener {
         }
     }
 
-
+    // 停止定期检查任务
+    private void stopPeriodicCheck() {
+        if (taskId != -1) {
+            Bukkit.getScheduler().cancelTask(taskId);
+            taskId = -1; // 重置任务ID
+            getLogger().info(languageManager.getMessage("periodic-check-stopped"));
+        }
+    }
+    
     // 检查玩家OP状态
-    private void checkPlayerOP(Player player) {
+    public void checkPlayerOP(Player player) {
         if (player.isOp()) {
             // 检查玩家是否在白名单中
             if (!isAllowedOP(player)) {
-                // 取消OP
-                player.setOp(false);
-                // 记录log
-                getLogger().warning(String.format(
-                    languageManager.getMessage("illegal-op-detected"),
-                    player.getName()
-                ));
+                removePlayerOP(player);
             }
         }
     }
 
+    // 去除玩家OP状态
+    public void removePlayerOP(Player player) {
+        // 取消OP
+        player.setOp(false);
+        // 记录log
+        getLogger().warning(String.format(
+            languageManager.getMessage("illegal-op-detected"),
+            player.getName()
+        ));
+    }    
+
     // 检查玩家是否在允许的OP列表中
-    private boolean isAllowedOP(Player player) {
+    public boolean isAllowedOP(Player player) {
         return allowedOPs.contains(player.getName()) || 
                allowedOPs.contains(player.getUniqueId().toString());
     }
