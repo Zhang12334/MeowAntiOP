@@ -1,0 +1,15 @@
+# Language / 语言
+# 可用列表 / Available languages: zh_hans / zh_hant / en_us / ja_jp
+language: zh_hans
+
+# 允许的OP列表 (支持玩家名或UUID)
+# Allowed OPs (Supports player name or UUID)
+allowed-ops:
+  - "a"
+  - "00000000-0000-0000-0000-000000000000"
+
+# 定期检查设置
+# Periodic check
+periodic-check:
+  enabled: true  # 是否启用定期检查
+  interval: 30.0 # 检查间隔(秒)，支持小数
