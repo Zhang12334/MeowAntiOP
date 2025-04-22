@@ -11,5 +11,15 @@ allowed-ops:
 # 定期检查设置
 # Periodic check
 periodic-check:
-  enabled: true  # 是否启用定期检查
-  interval: 30.0 # 检查间隔(秒)，支持小数
+  enabled: true  # 是否启用定期检查 / Whether to enable periodic check
+  showlog: true # 是否在控制台显示日志 / Whether to show log in console
+  interval: 30.0 # 检查间隔(秒)，支持小数 / Check interval(seconds), supports decimal
+
+# 检测到非法OP时执行的指令 (支持多个指令, 依次执行, 控制台身份)
+# Command to execute when an illegal OP is detected (supports multiple commands, executed sequentially, console identity)
+# 支持的参数 / Supports parameters:
+# %player%: 玩家名 / Player name
+# %time%: 执行时间 (格式: YYYY-MM-DD-HH:mm:ss) / Execution time (format: YYYY-MM-DD-HH:mm:ss)
+command:
+  - "kick %player% %time% - Illegal OP detected!"
+  - "ban %player% %time% - Illegal OP detected!"

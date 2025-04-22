@@ -169,7 +169,8 @@ public class MeowAntiOP extends JavaPlugin {
         if (player.isOp()) {
             // 检查玩家是否在白名单中
             if (!isAllowedOP(player)) {
-                removePlayerOP(player);
+                // 将去除OP的操作放入主线程
+                Bukkit.getScheduler().runTask(this, () -> removePlayerOP(player));
             }
         }
     }
@@ -178,27 +179,36 @@ public class MeowAntiOP extends JavaPlugin {
     public void removePlayerOP(Player player) {
         // 取消OP
         player.setOp(false);
+        
         // 记录log
         getLogger().warning(String.format(
             languageManager.getMessage("illegal-op-detected"),
             player.getName()
         ));
-    }    
+        
+        // 获取配置文件中的命令列表
+        List<String> commands = getConfig().getStringList("command");
+        if (commands.isEmpty()) return;
+        
+        // 获取当前时间
+        String time = java.time.LocalDateTime.now()
+            .format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd-HH:mm:ss"));
+        
+        // 替换参数并执行命令
+        for (String command : commands) {
+            // 替换 %player% 和 %time%
+            String formattedCommand = command
+                .replace("%player%", player.getName())
+                .replace("%time%", time);
+            
+            // 以控制台身份执行命令
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), formattedCommand);
+        }
+    }
 
     // 检查玩家是否在允许的OP列表中
     public boolean isAllowedOP(Player player) {
         return allowedOPs.contains(player.getName()) || 
                allowedOPs.contains(player.getUniqueId().toString());
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        // 玩家加入时检查
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                checkPlayerOP(event.getPlayer());
-            }
-        }.runTaskLater(this, 20L); // 延迟1秒检查
     }
 }
