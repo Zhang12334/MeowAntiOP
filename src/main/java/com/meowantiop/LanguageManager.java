@@ -1,4 +1,4 @@
-package com.meow;
+package com.meowantiop;
 
 import org.bukkit.configuration.file.FileConfiguration;
 

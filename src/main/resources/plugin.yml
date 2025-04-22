@@ -1,6 +1,6 @@
 name: MeowAntiOP
-version: 1.0.2
-main: com.meow.MeowAntiOP
+version: 1.0.3
+main: com.meowantiop.MeowAntiOP
 api-version: 1.16
 depend:
   - MeowLibs
