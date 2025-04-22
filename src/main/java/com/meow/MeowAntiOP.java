@@ -1,6 +1,7 @@
 package com.meow;
 
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -16,6 +17,7 @@ public class MeowAntiOP extends JavaPlugin {
     private List<String> allowedOPs; // 允许的OP列表
     private boolean periodicCheck; // 是否启用定期检查
     private double checkInterval; // 检查间隔(秒)
+    private boolean showlog; // 是否在控制台显示日志
     private int taskId = -1; // 定期检查任务ID
     @Override
     public void onEnable() {
@@ -74,6 +76,18 @@ public class MeowAntiOP extends JavaPlugin {
     }
 
     @Override
+    public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
+        if (sender instanceof Player) {
+            Player player = (Player) sender;
+            if (!isAllowedOP(player) && player.isOp()) {
+                removePlayerOP(player);
+                return false; // 命令执行失败
+            }
+        }
+        return true; // 命令执行成功
+    }
+
+    @Override
     public void onDisable() {
         // 取消定期检查任务
         stopPeriodicCheck();
@@ -85,24 +99,32 @@ public class MeowAntiOP extends JavaPlugin {
         allowedOPs = getConfig().getStringList("allowed-ops");
         periodicCheck = getConfig().getBoolean("periodic-check.enabled", true);
         checkInterval = getConfig().getDouble("periodic-check.interval", 30.0);
+        showlog = getConfig().getBoolean("periodic-check.showlog", true);
     }
 
     // 检查所有在线玩家
     private void checkAllPlayers() {
-        // 记录开始时间
-        long startTime = System.currentTimeMillis();
-        // log
-        getLogger().info(languageManager.getMessage("periodic-check-start"));
-        // 遍历所有在线玩家并检查其OP状态
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            checkPlayerOP(player);
+        if (showlog) {
+            // 记录开始时间
+            long startTime = System.currentTimeMillis();
+            // log
+            getLogger().info(languageManager.getMessage("periodic-check-start"));        
+            // 遍历所有在线玩家并检查其OP状态
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                checkPlayerOP(player);
+            }
+            // 记录结束时间
+            long endTime = System.currentTimeMillis();
+            // 计算花费的时间
+            long spendtime = endTime - startTime;
+            // log        
+            getLogger().info(String.format(languageManager.getMessage("periodic-check-complete"), spendtime));
+        } else {
+            // 遍历所有在线玩家并检查其OP状态
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                checkPlayerOP(player);
+            }
         }
-        // 记录结束时间
-        long endTime = System.currentTimeMillis();
-        // 计算花费的时间
-        long spendtime = endTime - startTime;
-        // log        
-        getLogger().info(String.format(languageManager.getMessage("periodic-check-complete"), spendtime));
     }
     
     // 启动定期检查任务
