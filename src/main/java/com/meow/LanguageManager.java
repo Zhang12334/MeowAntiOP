@@ -21,12 +21,12 @@ public class LanguageManager {
         // 有效的语言列表
         Set<String> validLanguages = new HashSet<>(Arrays.asList("zh_hans", "zh_hant", "en_us", "ja_jp"));
 
-        // 读取配置中的语言设置，默认为zh_cn
+        // 读取配置中的语言设置，默认为zh_hans
         String language = config.getString("language", "zh_hans");
 
         // 如果读取的语言不在有效列表中，则设为默认值
         if (!validLanguages.contains(language.toLowerCase())) {
-            language = "zh_cn";
+            language = "zh_hans";
         }
         messages.clear();
 
