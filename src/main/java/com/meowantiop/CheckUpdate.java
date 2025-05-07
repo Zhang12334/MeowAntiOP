@@ -46,7 +46,7 @@ public class CheckUpdate {
 
             // 比较版本号
             if (isVersionGreater(latestVersion, currentVersion)) {
-                logger.warning(languageManager.getMessage("updateavailable") + " v" + latestVersion);
+                logger.warning(languageManager.getMessage("updateavailable") + " " + latestVersion);
                 logger.warning(languageManager.getMessage("updatemessage"));
                 parseMarkdownAndLog(releaseNotes);
                 logger.warning(languageManager.getMessage("updateurl") + DOWNLOAD_URL);
